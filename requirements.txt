@@ -1,0 +1,25 @@
+# Document reading & text processing
+PyMuPDF==1.22.3
+markdown==3.5
+nltk==3.8.1
+tqdm==4.66.2
+
+# Embeddings
+sentence-transformers==2.2.2
+
+# Vector databases (choose one or both)
+faiss-cpu==1.7.4
+chromadb==0.4.24
+
+# LLM integration (choose based on what you're using)
+openai==1.30.1
+transformers==4.41.1
+accelerate==0.30.1  # for running transformers efficiently
+
+# Orchestration (optional, for LangChain pipelines)
+langchain==0.2.1
+
+# Utility
+python-dotenv==1.0.1
+numpy==1.26.4
+scikit-learn==1.4.2
