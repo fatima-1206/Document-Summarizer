@@ -87,5 +87,6 @@ def get_text_from_file(file_path_):
     raw_text = parse_file(file_path)
     # Clean the raw text
     cleaned_text = clean_text(raw_text)
+    print("Doc parsed.....")
     return cleaned_text
 

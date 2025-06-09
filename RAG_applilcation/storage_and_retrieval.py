@@ -25,3 +25,4 @@ def store_chunks(chunks, metadatas):
     chunks = list(set(chunks))  
     db.add_texts( texts=chunks, metadatas=metadatas)
     db.persist()
+    print(f"Stored {len(chunks)} chunks in the database...")

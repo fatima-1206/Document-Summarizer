@@ -60,6 +60,7 @@ def get_summary(vectorstore = vectorstore, llm_sum = llm_sum, k=5):
 
     if len(text) > 3000:
         text = text[:3000]
-
+    print(f"Generating summary for {len(filtered_chunks)} chunks...")
     summary = llm_sum.invoke(text)
+    print("Summary generated successfully.")
     return summary

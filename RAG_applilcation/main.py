@@ -20,7 +20,8 @@ if "query_output" not in st.session_state:
 # --- File Path Input Instead of Upload ---
 st.subheader("📁 Provide File Path")
 file_path = st.text_input("Paste the full path to your file (.txt, .pdf, .md):")
-
+# remove the surrounding quotes if any
+file_path = file_path.strip('"').strip("'")
 if st.button("📂 Load File"):
     if not file_path:
         st.warning("⚠️ Please paste a valid file path.")

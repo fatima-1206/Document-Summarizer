@@ -46,12 +46,13 @@ def get_query_response(query:str)-> str:
 
         Answer:"""
     )
+    print("Context length:", len(context.split()))
 
     rag_chain = LLMChain(
         llm=llm,
         prompt=prompt_template
     )
-
+    print("Running RAG chain...")
     response = rag_chain.run({
         "context": context,
         "question": query
