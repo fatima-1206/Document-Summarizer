@@ -11,6 +11,8 @@ myvenv/
 
 # ChromaDB files
 chroma_store/
+chroma_storage/
+
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints
 

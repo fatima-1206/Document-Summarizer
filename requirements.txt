@@ -3,6 +3,8 @@ ipykernel
 
 langchain
 langchain_experimental
+langchain_openai
+
 # Document reading & text processing
 pdfplumber
 markdown
@@ -18,10 +20,12 @@ sentence-transformers
 # Vector databases 
 chromadb
 
-# LLM integration (choose based on what you're using)
+
+hf_xet
+
 
 transformers
-accelerate  # for running transformers efficiently
+accelerate  
 
 # Utility
 python-dotenv
