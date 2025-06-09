@@ -17,30 +17,49 @@ pipe_sum = pipeline(
 # Wrap it with LangChain
 llm_sum = HuggingFacePipeline(pipeline=pipe_sum)
 
-def get_summary(k=5):
-    
+def get_summary(vectorstore, llm_sum, k=5):
+
     collection = vectorstore._collection
     all_docs = collection.get(include=["documents", "embeddings"])
-
-    if all_docs["embeddings"] is None or len(all_docs["embeddings"]) == 0:
-        raise ValueError("No embeddings found in the vectorstore!")
-
     embeddings = np.array(all_docs["embeddings"])
     documents = all_docs["documents"]
 
-    # Computing the centroid of all embeddings
     centroid = np.mean(embeddings, axis=0).reshape(1, -1)
-
     salience_scores = np.linalg.norm(embeddings - centroid, axis=1)
 
-    # Get indices of the top-k most salient chunks
-    top_k_indices = salience_scores.argsort()[::-1][:k]
-    salient_chunks = [documents[i] for i in top_k_indices]
+    # Compute salience bounds
+    lower_bound = np.percentile(salience_scores, 33)   # Avoid central
+    upper_bound = np.percentile(salience_scores, 85)   # Avoid outliers
 
-    input_text = "You are an academic writing assistant. Summarize the following document in elegant, natural language. Make sure it reads smoothly and sounds professional. Avoid copying bullet points verbatim. Use proper grammar and punctuation.\n"
-    input_text = " ".join(salient_chunks)
-    if len(input_text) > 3000:  
-        input_text = input_text[:3000]
+    # Filter chunks in the mid-salience band
+    mid_band_indices = [i for i, score in enumerate(salience_scores)
+                        if lower_bound < score < upper_bound]
 
-    summary = llm_sum.invoke(input_text)
+    # Sort those chunks by descending salience
+    mid_band_indices.sort(key=lambda i: salience_scores[i], reverse=False)
+
+    # De-duplicate while preserving order
+    seen = set()
+    unique_indices = []
+    for idx in mid_band_indices:
+        doc = documents[idx]
+        if doc not in seen:
+            seen.add(doc)
+            unique_indices.append(idx)
+        if len(unique_indices) == k:
+            break
+
+    salient_chunks = [documents[i] for i in unique_indices]
+
+    # Quality check on chunks
+    def is_valid_chunk(chunk):
+        return len(chunk.split()) > 10 and "." in chunk
+
+    filtered_chunks = list(filter(is_valid_chunk, salient_chunks))
+    text = "\n\n".join(filtered_chunks)
+
+    if len(text) > 3000:
+        text = text[:3000]
+
+    summary = llm_sum.invoke(text)
     return summary

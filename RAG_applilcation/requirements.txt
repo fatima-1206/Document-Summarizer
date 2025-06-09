@@ -4,6 +4,7 @@ ipykernel
 # Langchain framework and extensions
 langchain
 langchain_experimental
+langchain_community
 # langchain_openai
 
 # Document reading & web scraping

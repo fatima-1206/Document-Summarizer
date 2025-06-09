@@ -22,7 +22,6 @@ def submit_query():
         messagebox.showwarning("Empty query", "Please enter a query before submitting!")
         return
     
-    # For demo, we just echo the query
     response = f"Query Response: \n {get_query_response(query)}"
     
     # Display query response in the results box
