@@ -17,7 +17,7 @@ pipe_sum = pipeline(
 # Wrap it with LangChain
 llm_sum = HuggingFacePipeline(pipeline=pipe_sum)
 
-def get_summary(vectorstore, llm_sum, k=5):
+def get_summary(vectorstore = vectorstore, llm_sum = llm_sum, k=5):
 
     collection = vectorstore._collection
     all_docs = collection.get(include=["documents", "embeddings"])

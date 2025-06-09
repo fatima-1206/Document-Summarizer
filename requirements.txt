@@ -31,3 +31,4 @@ scikit-learn
 
 # GUI toolkit for Python
 tk
+streamlit
