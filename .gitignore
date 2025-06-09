@@ -8,6 +8,9 @@ myvenv/
 .env/
 .venv/
 
+
+# ChromaDB files
+chroma_store/
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints
 

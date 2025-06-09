@@ -1,6 +1,8 @@
 # pip install -r requirements.txt
 ipykernel
 
+langchain
+langchain_experimental
 # Document reading & text processing
 pdfplumber
 markdown
@@ -14,11 +16,10 @@ tqdm
 sentence-transformers
 
 # Vector databases 
-faiss-cpu
 chromadb
 
 # LLM integration (choose based on what you're using)
-openai
+
 transformers
 accelerate  # for running transformers efficiently
 
