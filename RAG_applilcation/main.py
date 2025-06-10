@@ -1,4 +1,4 @@
-import streamlit as st
+import streamlit as st 
 from summarizer import get_summary
 from docHandling import get_text_from_file
 from storage_and_retrieval import chunk_text, store_chunks, db, reload_connection
@@ -7,13 +7,17 @@ import os
 import atexit
 import warnings
 import nest_asyncio
+
+# Suppress specific warnings
 warnings.filterwarnings("ignore", message="CropBox missing from /Page")
+#  To avoid an error with Streamlit and asyncio
 nest_asyncio.apply()
+
 
 st.set_page_config(page_title="RAG App", layout="centered")
 st.title("Retrieval-Augmented Generation (RAG) App")
 
-# --- Session State ---
+# --- Session State ---------------------------------------------------------
 if "file_processed" not in st.session_state:
     st.session_state.file_processed = False
 if "summary_output" not in st.session_state:
@@ -21,11 +25,12 @@ if "summary_output" not in st.session_state:
 if "query_output" not in st.session_state:
     st.session_state.query_output = ""
 
-# --- File Path Input Instead of Upload ---
+# --- File Path Input -------------------------------------------------------
+
 st.subheader("📁 Provide File Path")
 file_path = st.text_input("Paste the full path to your file (.txt, .pdf, .md):")
-# remove the surrounding quotes if any
-file_path = file_path.strip('"').strip("'")
+file_path = file_path.strip('"').strip("'")  # remove the surrounding quotes if any
+
 if st.button("📂 Load File"):
     if not file_path:
         st.warning("⚠️ Please paste a valid file path.")
@@ -43,7 +48,9 @@ if st.button("📂 Load File"):
         except Exception as e:
             st.error(f"⚠️ Failed to load file: {str(e)}")
 
-# --- Summary Generation ---
+
+
+# --- Summary Generation ----------------------------------------------------
 st.subheader("📝 Generate Summary")
 if st.button("Generate Summary"):
     if st.session_state.file_processed:
@@ -53,7 +60,10 @@ if st.button("Generate Summary"):
 
 st.text_area("📌 Summary Output", st.session_state.summary_output, height=300)
 
-# --- Query Section ---
+
+
+
+# --- Query Section ----------------------------------------------------------
 st.divider()
 st.subheader("💬 Ask a Query")
 query = st.text_input("Type your question here:")
@@ -66,10 +76,10 @@ if st.button("🔎 Submit Query"):
 
 st.text_area("🧠 Query Response", st.session_state.query_output, height=300)
 
-# --- Footer ---
-st.markdown("---")
+# --- Footer -------------------------------------------------------------------
+st.markdown("---") # add a line
 
-# --- Cleanup ---
+# --- Cleanup -------------------------------------------------------------------
 def cleanup():
     db.delete_collection()
     print("🧹 Database collection deleted.")

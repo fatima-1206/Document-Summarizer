@@ -11,11 +11,33 @@ import unicodedata
 file_path = ""
 
 # get file extension
-def get_file_extension(file_path):
+def get_file_extension(file_path:str) -> str:
+    """
+    Returns the file extension for the given file path.
+
+    Args:
+        file_path (str): The path to the file.
+
+    Returns:
+        str: The file extension in lowercase, including the dot (e.g., '.pdf').
+    """
     return os.path.splitext(file_path)[-1].lower()
 
+
 # use the appropriate text parser based on file extension (pdf, markdown, txt)
-def parse_file(file_path):
+def parse_file(file_path:str):
+    """
+    Parses the file at the given path and extracts its text content.
+
+    Args:
+        file_path (str): The path to the file.
+
+    Raises:
+        ValueError: If the file type is unsupported.
+
+    Returns:
+        str: The extracted text content from the file.
+    """
     file_extension = get_file_extension(file_path)
     
     if file_extension == '.pdf':
@@ -34,7 +56,17 @@ def parse_file(file_path):
     else:
         raise ValueError(f"Unsupported file type: {file_extension}")
 
-def clean_text(text):
+def clean_text(text:str) -> str:
+    """
+    Cleans and normalizes the input text by removing unwanted characters, formatting artifacts,
+    and standardizing whitespace and punctuation.
+
+    Args:
+        text (str): The raw text to be cleaned.
+
+    Returns:
+        str: The cleaned and normalized text, suitable for further processing or analysis.
+    """
     # Normalize line breaks and spaces
     text = re.sub(r'\r\n|\r', '\n', text)           # Convert \r\n or \r to \n
     text = re.sub(r'\n{2,}', '\n\n', text)          # Collapse many newlines into 2
@@ -82,7 +114,16 @@ def clean_text(text):
 
     return text.strip()
 
-def get_text_from_file(file_path_):
+def get_text_from_file(file_path_:str) -> str:
+    """
+    Extracts and cleans text content from the specified file.
+
+    Args:
+        file_path_ (str): The path to the file to be processed.
+
+    Returns:
+        str: The cleaned and normalized text extracted from the file.
+    """
     file_path = file_path_
     raw_text = parse_file(file_path)
     # Clean the raw text

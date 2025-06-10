@@ -3,21 +3,42 @@ from langchain.llms import HuggingFacePipeline
 from queryProcessor import trim_context_to_token_limit
 import numpy as np
 
+# Load the pre-trained summarization model from HuggingFace
 summarization_model = AutoModelForSeq2SeqLM.from_pretrained("sshleifer/distilbart-cnn-12-6")
+
+# Specify the model name for tokenizer and pipeline usage
 summarization_model_name = "sshleifer/distilbart-cnn-12-6"
+
+# Load the tokenizer corresponding to the summarization model
 tokenizer_sum = AutoTokenizer.from_pretrained(summarization_model_name)
+
+# Load the model again for use in the pipeline (can reuse summarization_model if desired)
 model_sum = AutoModelForSeq2SeqLM.from_pretrained(summarization_model_name)
+
+# Create a HuggingFace pipeline for text-to-text generation (summarization)
 pipe_sum = pipeline(
     "text2text-generation",
     model=model_sum,
     tokenizer=tokenizer_sum,
-    max_length=1024
+    max_length=1024  # Set the maximum length for generated summaries
 )
 
-# Wrap it with LangChain
+# Wrap the pipeline with LangChain's HuggingFacePipeline for integration with LangChain workflows
 llm_sum = HuggingFacePipeline(pipeline=pipe_sum)
 
-def get_summary(vectorstore="", llm_sum=llm_sum, k=20):
+def get_summary(vectorstore="", llm_sum=llm_sum, k:int=20):
+    """
+    Generate a summary of the most salient document chunks from a vectorstore.
+
+    Args:
+        All arguments are optional.
+        vectorstore (str, optional): The vectorstore to use for retrieving documents. 
+        llm_sum (HuggingFacePipeline, optional): The language model pipeline for summarization. 
+        k (int, optional): The number of salient chunks to consider for summarization. Defaults to 20.
+
+    Returns:
+        str: The generated summary of the selected document chunks.
+    """
     from storage_and_retrieval import db
     vectorstore = db
     collection = vectorstore._collection

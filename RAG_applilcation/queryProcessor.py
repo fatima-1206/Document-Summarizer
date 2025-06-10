@@ -1,4 +1,3 @@
-
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline
 from langchain.llms import HuggingFacePipeline
 from langchain.prompts import PromptTemplate
@@ -7,20 +6,35 @@ import numpy as np
 from storage_and_retrieval import embedding_model
 from langchain.chains import LLMChain
 
+# model name to use for text generation
 model_name = "google/flan-t5-base"
+
+# Load the tokenizer and model from HuggingFace Transformers
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 
+# Creating a text2text-generation pipeline with the loaded model and tokenizer
 pipe = pipeline(
     "text2text-generation",
     model=model,
     tokenizer=tokenizer,
-    max_length=512
+    max_length=512 
 )
 
 llm = HuggingFacePipeline(pipeline=pipe)
 
-def trim_context_to_token_limit(docs, tokenizer, max_tokens):
+def trim_context_to_token_limit(docs, tokenizer, max_tokens:int):
+    """
+    Trims the provided documents so that their combined token count does not exceed max_tokens.
+
+    Args:
+        docs (list): List of documents, each with or without a 'page_content' attribute or as a string.
+        tokenizer (transformers.PreTrainedTokenizer): Tokenizer to count tokens.
+        max_tokens (int): Maximum allowed number of tokens in the combined context.
+
+    Returns:
+        str: Concatenated document texts, trimmed to fit within the token limit.
+    """
     context = ""
     total_tokens = 0
 
@@ -35,6 +49,16 @@ def trim_context_to_token_limit(docs, tokenizer, max_tokens):
     return context.strip()
 
 def get_query_response(query:str)-> str:
+    """
+    Processes a user query by retrieving relevant documents, constructing a prompt,
+    and generating a response using a language model.
+
+    Args:
+        query (str): The user's question.
+
+    Returns:
+        str: The generated answer based on retrieved context.
+    """
     from storage_and_retrieval import db
     from storage_and_retrieval import retriever
     results = retriever.get_relevant_documents(query)
