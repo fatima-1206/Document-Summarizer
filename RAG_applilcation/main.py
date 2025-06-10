@@ -1,6 +1,6 @@
 import streamlit as st 
 from summarizer import get_summary
-from RAG_applilcation.docHandler import get_text_from_file
+from docHandler import get_text_from_file
 from storage_and_retrieval import chunk_text, store_chunks, db, reload_connection
 from queryProcessor import get_query_response
 import os
