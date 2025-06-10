@@ -1,5 +1,7 @@
 # Core IPython kernel for Jupyter notebooks
 ipykernel
+jupyter
+bash_kernel
 
 # Langchain framework and extensions
 langchain

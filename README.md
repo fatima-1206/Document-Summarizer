@@ -42,29 +42,65 @@ Document-Summarizer
 ```
 
 ## Setup Guide
+
 *Note: This setup guide is made keeping Windows 11 in mind. It may or may not work in linux or any other OS without modifications.*
 
 - First clone the directory and create a virtual environment
+- 
   ```bash
   git clone https://github.com/fatima-1206/Document-Summarizer.git 
   python -m venv myvenv
   ```
 - Activate the virtual environment and install the dependancies from `requirments.txt`
+  
   ```bash
   myvenv/Scripts/activate
   pip install -r requirements.txt
   ```
+
+---
+  
+### Streamlit Application
+
 - To run the streamlit application, navigate to the directory and run the following command:
+
   ```bash
   cd RAG_applilcation
   streamlit run main.py
   ```
 - It should automatically open up in the browser, if it doesn't, open the following URL:
+
   ```bash
   http://localhost:8501/
   ```
   In case of further issues, look for a similar URL in the terminal.
+
+---
+
+### Jupyter Notebook
+
+If you are on VSCode, you can run the notebook by selecting the appropriate kernel.
+
+To run the notebook via CLI :
+
+- Register the virtual env as a kernel
+
+  ```bash
+  python -m ipykernel install --user --name=myvenv
+  ```
+
+- Run Jupyter Notebook in your virtual environment:
   
+  ```bash
+  Jupyter Notebook
+  ```
+Now your virtual environment should show up as a kernel when you first run the notebook.
+
+---
+
+Note that the first time you run the application, it may take a few minutes to download the models into your machine.
+
+
 ## Usage Guide
 - In the path field, copy paste the absolute path of your document and click Load File.
 
