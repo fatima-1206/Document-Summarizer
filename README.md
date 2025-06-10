@@ -64,11 +64,13 @@ Document-Summarizer
   http://localhost:8501/
   ```
   In case of further issues, look for a similar URL in the terminal.
-
+  
 ## Usage Guide
 - In the path field, copy paste the absolute path of your document and click Load File.
-    ![ss1](sampleRuns\doc3\output1.png)
+
+![ss1](sampleRuns/doc3/output1.png)
 
 - After the file has uploaded, you can click on the summary button to get a summary generated for your document.
 - Scroll down to see the query field. Try writing a simple query and press the submit query button to get the answer from your document!
-    ![ss1](sampleRuns\doc3\output2.png)
+
+![ss2](sampleRuns/doc3/output2.png)
