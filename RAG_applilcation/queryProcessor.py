@@ -5,8 +5,6 @@ from langchain.prompts import PromptTemplate
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 from storage_and_retrieval import embedding_model
-from storage_and_retrieval import retriever
-from storage_and_retrieval import db
 from langchain.chains import LLMChain
 
 model_name = "google/flan-t5-base"
@@ -22,15 +20,25 @@ pipe = pipeline(
 
 llm = HuggingFacePipeline(pipeline=pipe)
 
-def truncate_context(text, tokenizer, max_tokens=512):
-    tokens = tokenizer.encode(text, truncation=True, max_length=max_tokens)
-    return tokenizer.decode(tokens, skip_special_tokens=True)
+def trim_context_to_token_limit(docs, tokenizer, max_tokens):
+    context = ""
+    total_tokens = 0
 
+    for doc in docs:
+        doc_text = doc.page_content.strip() if hasattr(doc, 'page_content') else str(doc)
+        doc_tokens = tokenizer(doc_text, return_tensors='pt', truncation=False)['input_ids'][0]
+        if total_tokens + len(doc_tokens) <= max_tokens:
+            context += doc_text + "\n\n"
+            total_tokens += len(doc_tokens)
+        else:
+            break
+    return context.strip()
 
 def get_query_response(query:str)-> str:
+    from storage_and_retrieval import db
+    from storage_and_retrieval import retriever
     results = retriever.get_relevant_documents(query)
-    context = "\n\n".join([doc.page_content for doc in results])
-    context = truncate_context(context, tokenizer, max_tokens=512)
+    context = trim_context_to_token_limit(results, tokenizer, 512)
     prompt_template = PromptTemplate(
         input_variables=["context", "question"],
         template="""

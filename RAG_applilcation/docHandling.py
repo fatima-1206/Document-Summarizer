@@ -65,7 +65,7 @@ def clean_text(text):
 
     # Remove bracketed footnotes like [1], [12], (Fig. 3), etc.
     text = re.sub(r'\[\d+\]', '', text)
-    text = re.sub(r'\(.*?fig.*?\)', '', text, flags=re.IGNORECASE)
+    text = re.sub(r'\(.*?fig.,\'*?\)', '', text, flags=re.IGNORECASE)
 
     # Remove URLs
     text = re.sub(r'https?://\S+|www\.\S+', '', text)

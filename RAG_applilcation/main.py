@@ -1,10 +1,14 @@
 import streamlit as st
 from summarizer import get_summary
 from docHandling import get_text_from_file
-from storage_and_retrieval import chunk_text, store_chunks, db
+from storage_and_retrieval import chunk_text, store_chunks, db, reload_connection
 from queryProcessor import get_query_response
 import os
 import atexit
+import warnings
+import nest_asyncio
+warnings.filterwarnings("ignore", message="CropBox missing from /Page")
+nest_asyncio.apply()
 
 st.set_page_config(page_title="RAG App", layout="centered")
 st.title("Retrieval-Augmented Generation (RAG) App")
@@ -31,6 +35,8 @@ if st.button("📂 Load File"):
         try:
                 text = get_text_from_file(file_path)
                 chunks, metadatas = chunk_text(text, os.path.basename(file_path))
+                if db: 
+                    reload_connection()
                 store_chunks(chunks, metadatas)
                 st.session_state.file_processed = True
                 st.success(f"✅ File '{os.path.basename(file_path)}' loaded and processed successfully.")
@@ -62,7 +68,6 @@ st.text_area("🧠 Query Response", st.session_state.query_output, height=300)
 
 # --- Footer ---
 st.markdown("---")
-st.markdown("Made with ❤️ using Streamlit")
 
 # --- Cleanup ---
 def cleanup():
